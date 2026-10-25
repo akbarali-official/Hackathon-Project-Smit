@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import api from './api/axios';
 import AdminPanel from './pages/AdminPanel';
 import HRPanel from './pages/HRPanel';
-import EmployeePanel from './pages/EmployeePanel';
+import EmployeePanel from './pages/employeePanel';
 import Dashboard from './pages/Dashboard';
 import PayrollPanel from './pages/payrollPanel';
 import AiChat from './pages/AiChat';
