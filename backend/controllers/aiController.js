@@ -1,7 +1,7 @@
 const AiLog = require('../models/AiLog');
 const Employee = require('../models/Employee');
 const Attendance = require('../models/Attendance');
-const Leave = require('../models/Leave');
+const Leave = require('../models/leave');
 const PayrollRun = require('../models/PayrollRun');
 
 const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
