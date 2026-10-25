@@ -1,4 +1,4 @@
-const leave = require('../models/leave');
+const Leave = require('../models/leave');
 const Settings = require('../models/Settings');
 
 const QUOTA = { annual: 14, sick: 8, casual: 10, unpaid: Infinity };
@@ -16,7 +16,7 @@ const countWorkingDays = (start, end, weekend) => {
 };
 
 const usedDays = async (employeeId, type, year) => {
-  const rows = await leave.find({
+  const rows = await Leave.find({
     employeeId,
     type,
     status: { $in: ['pending', 'approved'] },
