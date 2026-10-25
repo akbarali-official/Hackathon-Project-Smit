@@ -57,7 +57,7 @@ exports.apply = async (req, res) => {
       return res.status(422).json({ message: 'Selected dates have no working days' });
     }
 
-    const overlap = await leave.findOne({
+    const overlap = await Leave.findOne({
       employeeId,
       status: { $in: ['pending', 'approved'] },
       startDate: { $lte: endDate },
