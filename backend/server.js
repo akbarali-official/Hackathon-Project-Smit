@@ -16,7 +16,7 @@ app.use('/api/leaves', require('./routes/leaveRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/payroll', require('./routes/payrollRoutes'));
 app.use('/api/ai', require('./routes/aiRoutes'));
-const PORT = process.env.PORT || 5000;
-connectDB().then(() => {
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-});
+
+ connectDB();
+
+module.exports = app;
