@@ -1,7 +1,7 @@
 const PayrollRun = require('../models/PayrollRun');
 const Employee = require('../models/Employee');
 const Attendance = require('../models/Attendance');
-const Leave = require('../models/Leave');
+const Leave = require('../models/leave');
 const Settings = require('../models/Settings');
 
 const pad = (n) => String(n).padStart(2, '0');

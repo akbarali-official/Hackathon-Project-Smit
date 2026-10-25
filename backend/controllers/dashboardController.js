@@ -1,6 +1,6 @@
 const Employee = require('../models/Employee');
 const Attendance = require('../models/Attendance');
-const Leave = require('../models/Leave');
+const Leave = require('../models/leave');
 
 const dateKey = (d) => {
   const y = d.getFullYear();

@@ -1,4 +1,4 @@
-const Leave = require('../models/Leave');
+const leave = require('../models/leave');
 const Settings = require('../models/Settings');
 
 const QUOTA = { annual: 14, sick: 8, casual: 10, unpaid: Infinity };
@@ -16,7 +16,7 @@ const countWorkingDays = (start, end, weekend) => {
 };
 
 const usedDays = async (employeeId, type, year) => {
-  const rows = await Leave.find({
+  const rows = await leave.find({
     employeeId,
     type,
     status: { $in: ['pending', 'approved'] },
@@ -57,13 +57,13 @@ exports.apply = async (req, res) => {
       return res.status(422).json({ message: 'Selected dates have no working days' });
     }
 
-    const overlap = await Leave.findOne({
+    const overlap = await leave.findOne({
       employeeId,
       status: { $in: ['pending', 'approved'] },
       startDate: { $lte: endDate },
       endDate: { $gte: startDate },
     });
-    if (overlap) return res.status(422).json({ message: 'Leave overlaps with an existing request' });
+    if (overlap) return res.status(422).json({ message: 'leave overlaps with an existing request' });
 
     const year = startDate.slice(0, 4);
     const used = await usedDays(employeeId, type, year);
