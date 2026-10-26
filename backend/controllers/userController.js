@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const audit = require('../middleware/audit');
 
 exports.createHR = async (req, res) => {
   try {
@@ -21,6 +22,7 @@ exports.createHR = async (req, res) => {
       role: 'hr',
       mustChangePassword: true,
     });
+    audit(req, 'create', 'user(hr)', hr._id, null, { name: hr.name, email: hr.email });
     res.status(201).json({ id: hr._id, name: hr.name, email: hr.email, role: hr.role });
   } catch (err) {
     res.status(500).json({ message: err.message });

@@ -6,6 +6,7 @@ import EmployeePanel from './pages/employeePanel';
 import Dashboard from './pages/Dashboard';
 import PayrollPanel from './pages/payrollPanel';
 import AiChat from './pages/AiChat';
+import Announcements from './pages/Announcements';
 
 const MAIN_LABEL = { admin: 'Users & Access', hr: 'People Operations', employee: 'My Work' };
 
@@ -57,6 +58,7 @@ export default function App() {
       ['main', MAIN_LABEL[user.role]],
       ['payroll', user.role === 'employee' ? 'Payslips' : 'Payroll'],
       ['ai', 'AI Assistant'],
+      ['news', 'Announcements'],
     ];
     return (
       <div className="shell">
@@ -79,6 +81,7 @@ export default function App() {
           {page === 'main' && user.role === 'employee' && <EmployeePanel />}
           {page === 'payroll' && <PayrollPanel role={user.role} />}
           {page === 'ai' && <AiChat role={user.role} />}
+          {page === 'news' && <Announcements role={user.role} />}
         </main>
       </div>
     );

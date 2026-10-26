@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const Employee = require('../models/Employee');
 const User = require('../models/User');
+const audit = require('../middleware/audit');
 
 exports.create = async (req, res) => {
   try {
@@ -44,7 +45,7 @@ exports.create = async (req, res) => {
       await Employee.findByIdAndDelete(employee._id);
       throw err;
     }
-
+    audit(req, 'create', 'user(hr)', hr._id, null, { name: hr.name, email: hr.email });
     res.status(201).json({ employee, tempPassword });
   } catch (err) {
     res.status(500).json({ message: err.message });

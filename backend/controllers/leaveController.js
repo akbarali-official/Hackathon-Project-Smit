@@ -1,5 +1,6 @@
 const Leave = require('../models/leave');
 const Settings = require('../models/Settings');
+const audit = require('../middleware/audit');
 
 const QUOTA = { annual: 14, sick: 8, casual: 10, unpaid: Infinity };
 const isDate = (s) => /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(new Date(s + 'T00:00:00Z'));
@@ -131,6 +132,7 @@ exports.decide = async (req, res) => {
     leave.status = decision;
     leave.comment = comment || '';
     leave.decidedBy = req.user._id;
+    audit(req, decision, 'leave', leave._id, { status: 'pending' }, { status: decision, comment: leave.comment });
     await leave.save();
     res.json(leave);
   } catch (err) {

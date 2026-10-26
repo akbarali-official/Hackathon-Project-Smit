@@ -3,6 +3,7 @@ const Employee = require('../models/Employee');
 const Attendance = require('../models/Attendance');
 const Leave = require('../models/leave');
 const Settings = require('../models/Settings');
+const audit = require('../middleware/audit');
 
 const pad = (n) => String(n).padStart(2, '0');
 const localKey = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
@@ -157,6 +158,7 @@ exports.finalize = async (req, res) => {
     runDoc.finalizedBy = req.user._id;
     runDoc.finalizedAt = new Date();
     await runDoc.save();
+    audit(req, 'finalize', 'payroll', runDoc._id, { status: 'draft' }, { status: 'finalized', month: runDoc.month });
     res.json(runDoc);
   } catch (err) {
     res.status(500).json({ message: err.message });
