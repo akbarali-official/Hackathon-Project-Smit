@@ -1,15 +1,19 @@
 const dns = require('dns');
-dns.setServers(['8.8.8.8', '8.8.4.4']);
+if (!process.env.VERCEL) dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('MongoDB connected');
-  } catch (err) {
-    console.error('MongoDB connection failed:', err.message);
-    process.exit(1);
+  for (let i = 1; i <= 3; i++) {
+    try {
+      await mongoose.connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 8000 });
+      console.log('MongoDB connected');
+      return;
+    } catch (err) {
+      console.error(`MongoDB connection failed (try ${i}/3):`, err.message);
+      if (i === 3) process.exit(1);
+      await new Promise((r) => setTimeout(r, 2000));
+    }
   }
 };
 
