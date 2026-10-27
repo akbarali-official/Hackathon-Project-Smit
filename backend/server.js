@@ -17,6 +17,7 @@ app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/payroll', require('./routes/payrollRoutes'));
 app.use('/api/ai', require('./routes/aiRoutes'));
 app.use('/api/comms', require('./routes/commsRoutes'));
+app.use('/api/org', require('./routes/orgRoutes'));
 
  connectDB();
 

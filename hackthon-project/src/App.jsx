@@ -7,6 +7,8 @@ import Dashboard from './pages/Dashboard';
 import PayrollPanel from './pages/payrollPanel';
 import AiChat from './pages/AiChat';
 import Announcements from './pages/Announcements';
+import OrgPanel from './pages/OrgPanel';
+import ChangePassword from './pages/ChangePassword';
 
 const MAIN_LABEL = { admin: 'Users & Access', hr: 'People Operations', employee: 'My Work' };
 
@@ -53,9 +55,22 @@ export default function App() {
   };
 
   if (user) {
+    if (user && user.mustChangePassword) {
+    return (
+      <ChangePassword
+        onLogout={logout}
+        onDone={() => {
+          const u = { ...user, mustChangePassword: false };
+          localStorage.setItem('user', JSON.stringify(u));
+          setUser(u);
+        }}
+      />
+    );
+  }
     const items = [
       ['dashboard', 'Dashboard'],
       ['main', MAIN_LABEL[user.role]],
+      ...(user.role !== 'employee' ? [['org', 'Organization']] : []),
       ['payroll', user.role === 'employee' ? 'Payslips' : 'Payroll'],
       ['ai', 'AI Assistant'],
       ['news', 'Announcements'],
@@ -67,6 +82,7 @@ export default function App() {
           {items.map(([k, label]) => (
             <button key={k} className={'menu-item' + (page === k ? ' active' : '')} onClick={() => setPage(k)}>{label}</button>
           ))}
+  
           <div className="side-foot">
             <div>{user.name}</div>
             <span className={'role-pill ' + user.role}>{user.role}</span>
@@ -82,6 +98,7 @@ export default function App() {
           {page === 'payroll' && <PayrollPanel role={user.role} />}
           {page === 'ai' && <AiChat role={user.role} />}
           {page === 'news' && <Announcements role={user.role} />}
+          {page === 'org' && user.role !== 'employee' && <OrgPanel role={user.role} />}
         </main>
       </div>
     );

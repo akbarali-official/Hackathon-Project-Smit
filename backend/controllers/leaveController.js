@@ -1,16 +1,17 @@
 const Leave = require('../models/leave');
 const Settings = require('../models/Settings');
+const Holiday = require('../models/Holiday');
 const audit = require('../middleware/audit');
 
 const QUOTA = { annual: 14, sick: 8, casual: 10, unpaid: Infinity };
 const isDate = (s) => /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(new Date(s + 'T00:00:00Z'));
 
-const countWorkingDays = (start, end, weekend) => {
+const countWorkingDays = (start, end, weekend, holidays = new Set()) => {
   let count = 0;
   const d = new Date(start + 'T00:00:00Z');
   const last = new Date(end + 'T00:00:00Z');
   while (d <= last) {
-    if (!weekend.includes(d.getUTCDay())) count++;
+    if (!weekend.includes(d.getUTCDay()) && !holidays.has(d.toISOString().slice(0, 10))) count++;
     d.setUTCDate(d.getUTCDate() + 1);
   }
   return count;
@@ -53,7 +54,8 @@ exports.apply = async (req, res) => {
     if (!employeeId) return res.status(400).json({ message: 'No employee profile linked' });
 
     const settings = (await Settings.findOne()) || {};
-    const days = countWorkingDays(startDate, endDate, settings.weekend || [0, 6]);
+    const holidays = new Set((await Holiday.find({ date: { $gte: startDate, $lte: endDate } })).map((h) => h.date));
+    const days = countWorkingDays(startDate, endDate, settings.weekend || [0, 6], holidays);
     if (days === 0) {
       return res.status(422).json({ message: 'Selected dates have no working days' });
     }
